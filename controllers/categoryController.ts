@@ -6,6 +6,7 @@ import {
   deleteCategoryService,
   getCategoryById,
   updateManyCategories,
+  updateBulkCategoryService,
 } from "../service/categoryService";
 
 export const createCategory = async (
@@ -82,11 +83,14 @@ const updateSubCategory = async (
   status: string
 ): Promise<any> => {
   const categories = await getCategoryTreeService(parent);
-  return Promise.all(
-    categories.map(async (category: any) => {
-      await updateCategoryService(category._id, { status });
-      await updateSubCategory(category._id, status);
-    })
+  if (categories.length === 0) return;
+
+  const categoryIds = categories.map((cat: any) => cat._id);
+
+  await updateBulkCategoryService({ _id: { $in: categoryIds } }, { status });
+
+  await Promise.all(
+    categories.map((cat: any) => updateSubCategory(cat._id, status))
   );
 };
 

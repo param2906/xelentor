@@ -9,7 +9,7 @@ export const getCategoryTreeService = async (parent: string | null = null) => {
   return await Category.find({ parent });
 };
 
-export const updateCategoryService = async (id: string, data: any) => {
+export const updateCategoryService = async (id: any, data: any) => {
   return await Category.findByIdAndUpdate(id, data, { new: true });
 };
 
@@ -23,4 +23,8 @@ export const deleteCategoryService = async (id: any) => {
 
 export const updateManyCategories = async (parent: any, reqData: any) => {
   return await Category.updateMany(parent, reqData);
+};
+
+export const updateBulkCategoryService = async (id: any, data: any) => {
+  return await Category.updateMany(id, data, { new: true });
 };
